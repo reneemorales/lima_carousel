@@ -1,9 +1,9 @@
 /* lima_carousel.1.0  | @author: Renee Morales | @website: reneemorales.com */
-(function (jQuery) {
+(function(jQuery) {
     jQuery.fn.extend({
-        lima_carousel: function (options) {
+        lima_carousel: function(options) {
             /****************************************************/
-            geek_carrusel_main = function (options) {
+            geek_carrusel_main = function(options) {
 
                 jQuery(options.root).find(' .item').addClass('invisible');
 
@@ -19,22 +19,31 @@
 
                 options.total = jQuery(options.root).find(' .item').length;
 
-                carrusel_main_init_v2(options);
 
-                jQuery(options.root_main).find(options.controls + ' a.next').click(function (e) {
-                    e.preventDefault();
-                    options.direccion = "next";
-                    carrusel_main_click_v2(options);
+                if (options.total > options.items) {
+                    carrusel_main_init_v2(options);
 
-                });
-                jQuery(options.root_main).find(options.controls + ' a.prev').click(function (e) {
-                    e.preventDefault();
-                    options.direccion = "prev";
-                    carrusel_main_click_v2(options);
-                });
+                    jQuery(options.root_main).find(options.controls + ' a.next').click(function(e) {
+                        e.preventDefault();
+                        options.direccion = "next";
+                        carrusel_main_click_v2(options);
+
+                    });
+                    jQuery(options.root_main).find(options.controls + ' a.prev').click(function(e) {
+                        e.preventDefault();
+                        options.direccion = "prev";
+                        carrusel_main_click_v2(options);
+                    });
+
+
+                } else {
+                    jQuery(options.root_main).find(options.controls).hide();
+                }
+
+
             };
             /****************************************************/
-            carrusel_main_init_v2 = function (options) {
+            carrusel_main_init_v2 = function(options) {
                 var total = options.total;
                 var p = options.start;
                 var sum = 0;
@@ -50,14 +59,14 @@
                     p1 = 0;
                 }
                 if (p2 >= total) {
-                    p1 = p1 - (p2 - total + 1)
+                    p1 = p1 - (p2 - total + 1);
                     p2 = total;
                 }
 
                 jQuery(options.root).find(' .item').removeClass('carrusel-visible').removeClass('lima_start').eq(p).addClass('lima_start');
-                jQuery(options.root).find(' .item').each(function (index, val) {
+                jQuery(options.root).find(' .item').each(function(index, val) {
                     if (index >= p1 && index <= p2) {
-                        jQuery(this).addClass('carrusel-visible')
+                        jQuery(this).addClass('carrusel-visible');
                     }
                     if (index < p1) {
                         sum = sum + jQuery(this).outerWidth(true);
@@ -68,8 +77,7 @@
                     console.log("XWIDTH:(" + index + ")" + jQuery(this).outerWidth(true));
                 });
 
-                console.log("p1:" + p1);
-                console.log("p2:" + p2);
+
                 if (isNaN(options.sum)) {
                     console.log("sum:" + sum);
                     animar_action(-sum, options);
@@ -78,7 +86,7 @@
                 }
             };
             /*****************************************************/
-            carrusel_main_click_v2 = function (options) {
+            carrusel_main_click_v2 = function(options) {
                 if (jQuery(options.root).hasClass('animando')) {
                     return false;
                 }
@@ -95,7 +103,7 @@
                     if (options.direccion == 'prev') {
                         var loop = loop.get().reverse();
                     }
-                    jQuery(loop).each(function (index, val) {
+                    jQuery(loop).each(function(index, val) {
                         if (nuevos_visibles > 0) {
                             jQuery(this).addClass('carrusel-temp');
                             jQuery(this).removeClass('carrusel-visible');
@@ -104,16 +112,16 @@
                     });
                     if (options.direccion == "next") {
                         var pos = parseInt(jQuery(options.root).find(' .carrusel-temp').last().attr('data-pos'));
-                        var evaluador = function (index, pos, items) {
+                        var evaluador = function(index, pos, items) {
                             return (index > pos && index <= (pos + items));
                         };
                     } else {
                         var pos = parseInt(jQuery(options.root).find(' .carrusel-temp').first().attr('data-pos'));
-                        var evaluador = function (index, pos, items) {
+                        var evaluador = function(index, pos, items) {
                             return (index >= (pos - items) && index < (pos));
                         };
                     }
-                    jQuery(options.root).find(' .item').each(function (index, val) {
+                    jQuery(options.root).find(' .item').each(function(index, val) {
                         if (evaluador(index, pos, options.items)) {
                             jQuery(this).addClass('carrusel-visible');
                         }
@@ -131,9 +139,9 @@
                 }
             };
             /*****************************************************/
-            animar = function (options) {
+            animar = function(options) {
                 var sum = 0;
-                jQuery(options.root).find(' .carrusel-temp').each(function (index, val) {
+                jQuery(options.root).find(' .carrusel-temp').each(function(index, val) {
                     sum = sum + jQuery(this).outerWidth(true);
                 });
                 var left = parseInt(jQuery(options.root).css('left'));
@@ -148,18 +156,18 @@
                 animar_action(left, options);
             };
             /*****************************************************/
-            animar_action = function (left, options) {
+            animar_action = function(left, options) {
                 jQuery(options.root).animate({
                     'left': left + 'px'
 
-                }, 600, function () {
+                }, 600, function() {
                     jQuery(options.root).find(' .carrusel-temp').removeClass('carrusel-temp');
                     jQuery(options.root).removeClass('animando');
                 });
             };
             /*****************************************************/
 
-            return this.each(function (index, value) {
+            return this.each(function(index, value) {
 
                 var optionsTemp = jQuery.extend(true, {}, options);
                 optionsTemp.root = jQuery(this).find('ul');

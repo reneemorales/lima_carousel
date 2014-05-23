@@ -268,19 +268,20 @@
         </ul>
     </div>
     <script>
-        $(function () {
+        $(function() {
 
             var options = {
-                'items': 3,
+                'items': 40,
                 'start': 4,
                 'controls': " .control"
             };
-            $('.pre_content').lima_carousel(options);
+            var t = $('.pre_content').lima_carousel(options);
+            t.test();
 
         });
 
 
-        $(window).load(function () {
+        $(window).load(function() {
 
 
         });
